@@ -85,10 +85,12 @@ stop_docker() {
 }
 
 start_docker
-# dockerd&
 sleep 2
-docker build -t web resource-personal_website/web/
-echo "done building docker container"
-ls
-docker ps
-docker save web > web-docker-image/web.tar
+
+docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
+docker pull $DOCKER_HUB_TEST_TAG || :
+docker build --pull -t $DOCKER_HUB_TEST_TAG --cache-from $DOCKER_HUB_TEST_TAG resource-haproxy/
+echo "done building $DOCKER_HUB_TEST_TAG"
+
+docker push $DOCKER_HUB_TEST_TAG
+echo "done pushing $DOCKER_HUB_TEST_TAG"

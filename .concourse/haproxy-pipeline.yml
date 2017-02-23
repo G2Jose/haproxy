@@ -1,0 +1,55 @@
+jobs:
+- name: build-haproxy
+  public: true
+  serial: true
+  plan:
+  - get: resource-haproxy
+    trigger: true
+  - task: build-haproxy-container
+    file: resource-haproxy/.concourse/tasks/build-haproxy-container.yml
+    privileged: true
+    params:
+      DOCKER_HUB_EMAIL: {{docker-hub-email}}
+      DOCKER_HUB_USERNAME: {{docker-hub-username}}
+      DOCKER_HUB_PASSWORD: {{docker-hub-password}}
+      DOCKER_HUB_TEST_TAG: georgejose/haproxy:test
+- name: test-haproxy
+  public: true
+  serial: true
+  plan:
+  - get: resource-haproxy
+    passed: [build-haproxy]
+    trigger: true
+  - task: test-haproxy-container
+    file: resource-haproxy/.concourse/tasks/test-haproxy-container.yml
+    privileged: true
+    params:
+      DOCKER_HUB_EMAIL: {{docker-hub-email}}
+      DOCKER_HUB_USERNAME: {{docker-hub-username}}
+      DOCKER_HUB_PASSWORD: {{docker-hub-password}}
+      DOCKER_HUB_TEST_TAG: georgejose/haproxy:test
+      DOCKER_HUB_DEPLOY_TAG: georgejose/haproxy:latest
+- name: deploy-web
+  public: true
+  serial: true
+  plan:
+  - get: resource-haproxy
+    passed: [test-web]
+    trigger: true
+  - task: deploy-haproxy-container
+    file: resource-haproxy/.concourse/tasks/deploy-haproxy-container.yml
+    privileged: true
+    params:
+      DOCKER_HUB_EMAIL: {{docker-hub-email}}
+      DOCKER_HUB_USERNAME: {{docker-hub-username}}
+      DOCKER_HUB_PASSWORD: {{docker-hub-password}}
+      DOCKER_HUB_DEPLOY_TAG: georgejose/haproxy:latest
+      SSH_HOST: george@138.197.146.211
+      DEPLOY_SSH_KEY: {{deploy-ssh-key}}
+
+resources:
+- name: resource-haproxy
+  type: git
+  source:
+    uri: https://github.com/G2Jose/haproxy.git
+    branch: concourse

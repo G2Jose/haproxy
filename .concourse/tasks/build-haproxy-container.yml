@@ -6,10 +6,10 @@ image_resource:
   source: {repository: docker, tag: dind}
 
 inputs:
-- name: resource-personal_website
+- name: resource-haproxy
 
 outputs:
 - name: web-docker-image
 
 run:
-  path: ./resource-personal_website/.concourse/tasks/build-web-container.sh
+  path: ./resource-haproxy/.concourse/tasks/build-haproxy-container.sh

@@ -1,0 +1,12 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: {repository: docker, tag: dind}
+
+inputs:
+- name: resource-haproxy
+
+run:
+  path: resource-haproxy/.concourse/tasks/test-haproxy-container.sh
