@@ -6,7 +6,7 @@ image_resource:
   source: {repository: docker, tag: dind}
 
 inputs:
-- name: resource-personal-website
+- name: resource-haproxy
 
 run:
-  path: resource-personal-website/.concourse/tasks/deploy-web-container.sh
+  path: resource-haproxy/.concourse/tasks/deploy-haproxy-container.sh
