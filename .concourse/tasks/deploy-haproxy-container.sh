@@ -87,7 +87,7 @@ start_docker
 apk add --no-cache openssh-client
 eval $(ssh-agent -s)
 echo "$DEPLOY_SSH_KEY" > ssh_key
-cat ssh_key && chmod 400 ssh_key && ssh-add ssh_key
+chmod 400 ssh_key && ssh-add ssh_key && rm -rf ssh_key
 mkdir -p ~/.ssh
 echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
 ssh $SSH_HOST << EOF
