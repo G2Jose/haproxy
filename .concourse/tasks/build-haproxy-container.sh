@@ -89,6 +89,9 @@ sleep 2
 
 docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
 docker pull $DOCKER_HUB_TEST_TAG || :
+
+mkdir -p resource-haproxy/private
+echo "$SSL_CERTIFICATE" > resource-haproxy/private/georgejose.com.pem
 docker build --pull -t $DOCKER_HUB_TEST_TAG --cache-from $DOCKER_HUB_TEST_TAG resource-haproxy/
 echo "done building $DOCKER_HUB_TEST_TAG"
 
