@@ -1,0 +1,11 @@
+**/node_modules
+/dist
+/.tmp
+/.sass-cache
+/bower_components
+.DS_Store
+*.log
+haproxy/ssl
+haproxy/ssl_decrypted.zip
+jupyter/notebooks
+**/private

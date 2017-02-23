@@ -1,0 +1,15 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: {repository: docker, tag: dind}
+
+inputs:
+- name: resource-personal_website
+
+outputs:
+- name: web-docker-image
+
+run:
+  path: ./resource-personal_website/.concourse/tasks/build-web-container.sh
