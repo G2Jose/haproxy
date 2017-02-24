@@ -90,12 +90,25 @@ echo "$DEPLOY_SSH_KEY" > ssh_key
 chmod 400 ssh_key && ssh-add ssh_key && rm -rf ssh_key
 mkdir -p ~/.ssh
 echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
 ssh $SSH_HOST << EOF
+
+  #Log in to docker hub
   docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
   docker pull $DOCKER_HUB_DEPLOY_TAG
-  docker ps -a | awk '{ print \$1,\$2 }' | grep $DOCKER_HUB_DEPLOY_TAG | awk '{print \$1 }' | xargs -I {} docker stop {};
-  docker ps -a | awk '{ print \$1,\$2 }' | grep $DOCKER_HUB_DEPLOY_TAG | awk '{print \$1 }' | xargs -I {} docker rm {};
-  docker run -p 80:80 -p 443:443 -dt $DOCKER_HUB_DEPLOY_TAG
+
+  # Delete all stopped containers
+  docker ps -q -f status=exited | xargs --no-run-if-empty docker rm
+  # Delete all dangling (unused) images
+  docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi
+
+  #stop and remove containers that have the image $DOCKER_HUB_DEPLOY_TAG as their ancestor
+  docker ps -a -q --filter ancestor=$DOCKER_HUB_DEPLOY_TAG --format={{.ID}} | xargs docker stop
+  docker ps -a -q --filter ancestor=$DOCKER_HUB_DEPLOY_TAG --format={{.ID}} | xargs docker rm
+  
+  #Start container from image $DOCKER_HUB_DEPLOY_TAG & exit success / failure
+  docker run -p 80:80 -p 443:443 -dt "$DOCKER_HUB_DEPLOY_TAG"
   exit $?
 EOF
+
 exit $?
