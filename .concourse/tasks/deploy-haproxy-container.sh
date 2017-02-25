@@ -108,7 +108,6 @@ ssh $SSH_HOST << EOF
   
   #Start container from image $DOCKER_HUB_DEPLOY_TAG & exit success / failure
   docker run --net=host -dt "$DOCKER_HUB_DEPLOY_TAG"
-  exit $?
 EOF
 
 exit $?
