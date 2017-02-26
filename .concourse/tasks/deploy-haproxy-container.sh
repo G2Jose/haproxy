@@ -110,7 +110,7 @@ ssh $SSH_HOST << EOF
   docker rm "$DOCKER_HUB_DEPLOY_NAME"
 
   #Start container from image $DOCKER_HUB_DEPLOY_TAG & exit success / failure
-  docker run --net=host -d --name "$DOCKER_HUB_DEPLOY_NAME" "$DOCKER_HUB_DEPLOY_TAG"
+  docker run --net=host -d --restart always --name "$DOCKER_HUB_DEPLOY_NAME" "$DOCKER_HUB_DEPLOY_TAG"
   
   #Start container from image $DOCKER_HUB_DEPLOY_TAG & exit success / failure
   # docker run --net=host -d --name "$DOCKER_HUB_DEPLOY_NAME" "$DOCKER_HUB_DEPLOY_TAG"
