@@ -1,6 +1,6 @@
 # [http://georgejose.com](https://georgejose.com)
 
-[![build status](https://gitlab.com/G2Jose/personal_website/badges/master/build.svg)](https://gitlab.com/G2Jose/personal_website/commits/master)
+[![build status](http://ci.georgejose.com/api/v1/teams/main/pipelines/pipeline/jobs/deploy-haproxy/badge)](http://ci.georgejose.com/)
 
 My HAProxy configuration for HTTPS.
 
